@@ -42,7 +42,6 @@
 #define EKF2_HPP
 
 #include "EKF/ekf.h"
-#include "Utility/PreFlightChecker.hpp"
 
 #include "EKF2Selector.hpp"
 
@@ -78,6 +77,7 @@
 #include <uORB/topics/sensor_selection.h>
 #include <uORB/topics/vehicle_attitude.h>
 #include <uORB/topics/vehicle_command.h>
+#include <uORB/topics/vehicle_command_ack.h>
 #include <uORB/topics/vehicle_global_position.h>
 #include <uORB/topics/vehicle_imu.h>
 #include <uORB/topics/vehicle_land_detected.h>
@@ -387,8 +387,10 @@ private:
 
 	uORB::Subscription _sensor_selection_sub{ORB_ID(sensor_selection)};
 	uORB::Subscription _status_sub{ORB_ID(vehicle_status)};
-	uORB::Subscription _vehicle_command_sub{ORB_ID(vehicle_command)};
 	uORB::Subscription _vehicle_land_detected_sub{ORB_ID(vehicle_land_detected)};
+
+	uORB::Subscription _vehicle_command_sub{ORB_ID(vehicle_command)};
+	uORB::Publication<vehicle_command_ack_s> _vehicle_command_ack_pub{ORB_ID(vehicle_command_ack)};
 
 	uORB::SubscriptionCallbackWorkItem _sensor_combined_sub{this, ORB_ID(sensor_combined)};
 	uORB::SubscriptionCallbackWorkItem _vehicle_imu_sub{this, ORB_ID(vehicle_imu)};
@@ -415,7 +417,6 @@ private:
 	uint32_t _filter_control_status_changes{0};
 	uint32_t _filter_fault_status_changes{0};
 	uint32_t _innov_check_fail_status_changes{0};
-	uint32_t _filter_warning_event_changes{0};
 	uint32_t _filter_information_event_changes{0};
 
 	uORB::PublicationMulti<ekf2_timestamps_s>            _ekf2_timestamps_pub{ORB_ID(ekf2_timestamps)};
@@ -475,8 +476,6 @@ private:
 	hrt_abstime _status_gravity_pub_last {0};
 	uORB::PublicationMulti<estimator_aid_source3d_s> _estimator_aid_src_gravity_pub{ORB_ID(estimator_aid_src_gravity)};
 #endif // CONFIG_EKF2_GRAVITY_FUSION
-
-	PreFlightChecker _preflt_checker;
 
 	Ekf _ekf;
 
@@ -657,6 +656,8 @@ private:
 		// optical flow fusion
 		(ParamExtInt<px4::params::EKF2_OF_CTRL>)
 		_param_ekf2_of_ctrl, ///< optical flow fusion selection
+		(ParamExtInt<px4::params::EKF2_OF_GYR_SRC>)
+		_param_ekf2_of_gyr_src,
 		(ParamExtFloat<px4::params::EKF2_OF_DELAY>)
 		_param_ekf2_of_delay, ///< optical flow measurement delay relative to the IMU (mSec) - this is to the middle of the optical flow integration interval
 		(ParamExtFloat<px4::params::EKF2_OF_N_MIN>)

@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2013-2019 PX4 Development Team. All rights reserved.
+ *   Copyright (c) 2024 PX4 Development Team. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -32,70 +32,63 @@
  ****************************************************************************/
 
 /**
- * @file battery_params.c
+ * @file bmp581_i2c.cpp
  *
- * Parameters defined by the battery lib, shared between all batteries.
- *
- * @author Julian Oes <julian@oes.ch>
+ * I2C interface for BMP581
  */
 
-/**
- * Low threshold
- *
- * Sets the threshold when the battery will be reported as low.
- * This has to be higher than the critical threshold.
- *
- * @group Battery Calibration
- * @unit norm
- * @min 0.12
- * @max 0.5
- * @decimal 2
- * @increment 0.01
- */
-PARAM_DEFINE_FLOAT(BAT_LOW_THR, 0.15f);
+#include <drivers/device/i2c.h>
 
-/**
- * Critical threshold
- *
- * Sets the threshold when the battery will be reported as critically low.
- * This has to be lower than the low threshold. This threshold commonly
- * will trigger RTL.
- *
- * @group Battery Calibration
- * @unit norm
- * @min 0.05
- * @max 0.25
- * @decimal 2
- * @increment 0.01
- */
-PARAM_DEFINE_FLOAT(BAT_CRIT_THR, 0.07f);
+#include "bmp581.h"
 
-/**
- * Emergency threshold
- *
- * Sets the threshold when the battery will be reported as dangerously low.
- * This has to be lower than the critical threshold. This threshold commonly
- * will trigger landing.
- *
- * @group Battery Calibration
- * @unit norm
- * @min 0.03
- * @max 0.1
- * @decimal 2
- * @increment 0.01
- */
-PARAM_DEFINE_FLOAT(BAT_EMERGEN_THR, 0.05f);
+class BMP581_I2C: public device::I2C, public IBMP581
+{
+public:
+	BMP581_I2C(uint8_t bus, uint32_t device, int bus_frequency);
+	virtual ~BMP581_I2C() = default;
 
-/**
- * Expected battery current in flight.
- *
- * This value is used to initialize the in-flight average current estimation,
- * which in turn is used for estimating remaining flight time and RTL triggering.
- *
- * @group Battery Calibration
- * @unit A
- * @min 0
- * @max 500
- * @increment 0.1
- */
-PARAM_DEFINE_FLOAT(BAT_AVRG_CURRENT, 15.0f);
+	int init();
+
+	uint8_t get_reg(uint8_t addr);
+	int get_reg_buf(uint8_t addr, uint8_t *buf, uint8_t len);
+	int set_reg(uint8_t value, uint8_t addr);
+
+	uint32_t get_device_id() const override { return device::I2C::get_device_id(); }
+
+	uint8_t get_device_address() const override { return device::I2C::get_device_address(); }
+};
+
+IBMP581 *bmp581_i2c_interface(uint8_t busnum, uint32_t device, int bus_frequency)
+{
+	return new BMP581_I2C(busnum, device, bus_frequency);
+}
+
+BMP581_I2C::BMP581_I2C(uint8_t bus, uint32_t device, int bus_frequency) :
+	I2C(DRV_BARO_DEVTYPE_BMP581, MODULE_NAME, bus, device, bus_frequency)
+{
+}
+
+int BMP581_I2C::init()
+{
+	return I2C::init();
+}
+
+uint8_t BMP581_I2C::get_reg(uint8_t addr)
+{
+	uint8_t cmd[2] = { (uint8_t)(addr), 0};
+	transfer(&cmd[0], 1, &cmd[1], 1);
+
+	return cmd[1];
+}
+
+int BMP581_I2C::get_reg_buf(uint8_t addr, uint8_t *buf, uint8_t len)
+{
+	const uint8_t cmd = (uint8_t)(addr);
+	return transfer(&cmd, sizeof(cmd), buf, len);
+}
+
+int BMP581_I2C::set_reg(uint8_t value, uint8_t addr)
+{
+	uint8_t cmd[2] = { (uint8_t)(addr), value};
+	return transfer(cmd, sizeof(cmd), nullptr, 0);
+}

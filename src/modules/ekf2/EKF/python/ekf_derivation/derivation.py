@@ -314,6 +314,20 @@ def compute_wind_init_and_cov_from_airspeed(
     wind = wind.subs({sideslip: 0.0})
     return (wind, P)
 
+def compute_wind_init_and_cov_from_wind_speed_and_direction(
+        wind_speed: sf.Scalar,
+        wind_direction: sf.Scalar,
+        wind_speed_var: sf.Scalar,
+        wind_direction_var: sf.Scalar
+)-> (sf.V2, sf.V2):
+    wind = sf.V2(wind_speed * sf.cos(wind_direction), wind_speed * sf.sin(wind_direction))
+    H = wind.jacobian([wind_speed, wind_direction])
+    R = sf.Matrix.diag([wind_speed_var, wind_direction_var])
+
+    P = H * R * H.T
+    P_diag = sf.V2(P[0,0], P[1,1])
+    return (wind, P_diag)
+
 def predict_sideslip(
         state: State,
         epsilon: sf.Scalar
@@ -361,6 +375,40 @@ def compute_sideslip_h_and_k(
     K = P * H.T / sf.Max(innov_var, epsilon)
 
     return (H.T, K)
+
+def predict_vel_body(
+        state: VState
+) -> (sf.V3):
+    vel = state["vel"]
+    R_to_body = state["quat_nominal"].inverse()
+    return R_to_body * vel
+
+def compute_ev_body_vel_hx(
+        state: VState,
+) -> (VTangent):
+
+    state = vstate_to_state(state)
+    meas_pred = predict_vel_body(state)
+    Hx = jacobian_chain_rule(meas_pred[0], state)
+    return (Hx.T)
+
+def compute_ev_body_vel_hy(
+        state: VState,
+) -> (VTangent):
+
+    state = vstate_to_state(state)
+    meas_pred = predict_vel_body(state)[1]
+    Hy = jacobian_chain_rule(meas_pred, state)
+    return (Hy.T)
+
+def compute_ev_body_vel_hz(
+        state: VState,
+) -> (VTangent):
+
+    state = vstate_to_state(state)
+    meas_pred = predict_vel_body(state)[2]
+    Hz = jacobian_chain_rule(meas_pred, state)
+    return (Hz.T)
 
 def predict_mag_body(state) -> sf.V3:
     mag_field_earth = state["mag_I"]
@@ -687,6 +735,7 @@ if not args.disable_wind:
     generate_px4_function(compute_sideslip_h_and_k, output_names=["H", "K"])
     generate_px4_function(compute_sideslip_innov_and_innov_var, output_names=["innov", "innov_var"])
     generate_px4_function(compute_wind_init_and_cov_from_airspeed, output_names=["wind", "P_wind"])
+    generate_px4_function(compute_wind_init_and_cov_from_wind_speed_and_direction, output_names=["wind", "P_wind"])
 
 generate_px4_function(compute_yaw_innov_var_and_h, output_names=["innov_var", "H"])
 generate_px4_function(compute_flow_xy_innov_var_and_hx, output_names=["innov_var", "H"])
@@ -697,5 +746,8 @@ generate_px4_function(compute_gnss_yaw_pred_innov_var_and_h, output_names=["meas
 generate_px4_function(compute_gravity_xyz_innov_var_and_hx, output_names=["innov_var", "Hx"])
 generate_px4_function(compute_gravity_y_innov_var_and_h, output_names=["innov_var", "Hy"])
 generate_px4_function(compute_gravity_z_innov_var_and_h, output_names=["innov_var", "Hz"])
+generate_px4_function(compute_ev_body_vel_hx, output_names=["H"])
+generate_px4_function(compute_ev_body_vel_hy, output_names=["H"])
+generate_px4_function(compute_ev_body_vel_hz, output_names=["H"])
 
 generate_px4_state(State, tangent_idx)

@@ -68,28 +68,34 @@ void Ekf::controlFakePosFusion()
 		const float innov_gate = 3.f;
 
 		updateAidSourceStatus(aid_src,
-					 _time_delayed_us,
-					 position,                                           // observation
-					 obs_var,                                            // observation variance
-					 Vector2f(_state.pos) - position,                    // innovation
-					 Vector2f(getStateVariance<State::pos>()) + obs_var, // innovation variance
-					 innov_gate);                                        // innovation gate
+				      _time_delayed_us,
+				      position,                                           // observation
+				      obs_var,                                            // observation variance
+				      Vector2f(_state.pos) - position,                    // innovation
+				      Vector2f(getStateVariance<State::pos>()) + obs_var, // innovation variance
+				      innov_gate);                                        // innovation gate
 
-		const bool continuing_conditions_passing = !isHorizontalAidingActive()
-				&& ((getTiltVariance() > sq(math::radians(3.f))) || _control_status.flags.vehicle_at_rest)
-				&& (!(_params.imu_ctrl & static_cast<int32_t>(ImuCtrl::GravityVector)) || _control_status.flags.vehicle_at_rest);
-
-		const bool starting_conditions_passing = continuing_conditions_passing
-				&& _horizontal_deadreckon_time_exceeded;
+		const bool enable_conditions_passing = !isHorizontalAidingActive()
+						       && ((getTiltVariance() > sq(math::radians(3.f))) || _control_status.flags.vehicle_at_rest)
+						       && (!(_params.imu_ctrl & static_cast<int32_t>(ImuCtrl::GravityVector)) || _control_status.flags.vehicle_at_rest)
+						       && _horizontal_deadreckon_time_exceeded;
 
 		if (_control_status.flags.fake_pos) {
-			if (continuing_conditions_passing) {
+			if (enable_conditions_passing) {
 
 				// always protect against extreme values that could result in a NaN
 				if ((aid_src.test_ratio[0] < sq(100.0f / innov_gate))
 				    && (aid_src.test_ratio[1] < sq(100.0f / innov_gate))
 				   ) {
-					fuseHorizontalPosition(aid_src);
+					if (!aid_src.innovation_rejected
+					    && fuseDirectStateMeasurement(aid_src.innovation[0], aid_src.innovation_variance[0], aid_src.observation_variance[0],
+									  State::pos.idx + 0)
+					    && fuseDirectStateMeasurement(aid_src.innovation[1], aid_src.innovation_variance[1], aid_src.observation_variance[1],
+									  State::pos.idx + 1)
+					   ) {
+						aid_src.fused = true;
+						aid_src.time_last_fuse = _time_delayed_us;
+					}
 				}
 
 				const bool is_fusion_failing = isTimedOut(aid_src.time_last_fuse, (uint64_t)4e5);
@@ -104,14 +110,13 @@ void Ekf::controlFakePosFusion()
 			}
 
 		} else {
-			if (starting_conditions_passing) {
+			if (enable_conditions_passing) {
 				ECL_INFO("start fake position fusion");
 				_control_status.flags.fake_pos = true;
 				resetFakePosFusion();
 
 				if (_control_status.flags.tilt_align) {
 					// The fake position fusion is not started for initial alignement
-					_warning_events.flags.stopping_navigation = true;
 					ECL_WARN("stopping navigation");
 				}
 			}
