@@ -1136,7 +1136,7 @@ PARAM_DEFINE_FLOAT(RC18_DZ, 0.0f);
 PARAM_DEFINE_INT32(RC_CHAN_CNT, 0);
 
 /**
- * Roll control channel mapping.
+ * 横滚控制通道映射
  *
  * The channel index (starting from 1 for channel 1) indicates
  * which channel should be used for reading roll inputs from.
@@ -1168,7 +1168,7 @@ PARAM_DEFINE_INT32(RC_CHAN_CNT, 0);
 PARAM_DEFINE_INT32(RC_MAP_ROLL, 0);
 
 /**
- * Pitch control channel mapping.
+ * 俯仰控制通道映射
  *
  * The channel index (starting from 1 for channel 1) indicates
  * which channel should be used for reading pitch inputs from.
@@ -1235,7 +1235,7 @@ PARAM_DEFINE_INT32(RC_MAP_PITCH, 0);
 PARAM_DEFINE_INT32(RC_MAP_FAILSAFE, 0);
 
 /**
- * Throttle control channel mapping.
+ * 油门控制通道映射
  *
  * The channel index (starting from 1 for channel 1) indicates
  * which channel should be used for reading throttle inputs from.
@@ -1267,7 +1267,7 @@ PARAM_DEFINE_INT32(RC_MAP_FAILSAFE, 0);
 PARAM_DEFINE_INT32(RC_MAP_THROTTLE, 0);
 
 /**
- * Yaw control channel mapping.
+ * 偏航控制通道映射
  *
  * The channel index (starting from 1 for channel 1) indicates
  * which channel should be used for reading yaw inputs from.
@@ -1299,7 +1299,7 @@ PARAM_DEFINE_INT32(RC_MAP_THROTTLE, 0);
 PARAM_DEFINE_INT32(RC_MAP_YAW, 0);
 
 /**
- * Single channel flight mode selection
+ * 单通道飞行模式选择
  *
  * If this parameter is non-zero, flight modes are only selected
  * by this channel and are assigned to six slots.
@@ -1330,7 +1330,7 @@ PARAM_DEFINE_INT32(RC_MAP_YAW, 0);
 PARAM_DEFINE_INT32(RC_MAP_FLTMODE, 0);
 
 /**
- * Return switch channel
+ * 返航开关通道
  *
  * @min 0
  * @max 18
@@ -1358,7 +1358,7 @@ PARAM_DEFINE_INT32(RC_MAP_FLTMODE, 0);
 PARAM_DEFINE_INT32(RC_MAP_RETURN_SW, 0);
 
 /**
- * Loiter switch channel
+ * 盘旋开关通道
  *
  * @min 0
  * @max 18
@@ -1442,7 +1442,7 @@ PARAM_DEFINE_INT32(RC_MAP_OFFB_SW, 0);
 PARAM_DEFINE_INT32(RC_MAP_KILL_SW, 0);
 
 /**
- * Arm switch channel.
+ * 解锁Arm开关通道
  *
  * Use it to arm/disarm via switch instead of default throttle stick. If this is
  * assigned, arming and disarming via stick is disabled.
@@ -1470,10 +1470,10 @@ PARAM_DEFINE_INT32(RC_MAP_KILL_SW, 0);
  * @value 17 Channel 17
  * @value 18 Channel 18
  */
-PARAM_DEFINE_INT32(RC_MAP_ARM_SW, 0);
+PARAM_DEFINE_INT32(RC_MAP_ARM_SW, 10);
 
 /**
- * Flaps channel
+ * 襟翼通道
  *
  * @min 0
  * @max 18
@@ -1529,7 +1529,7 @@ PARAM_DEFINE_INT32(RC_MAP_FLAPS, 0);
 PARAM_DEFINE_INT32(RC_MAP_TRANS_SW, 0);
 
 /**
- * Landing gear switch channel
+ * 起落架开关通道
  *
  * @min 0
  * @max 18
@@ -1590,7 +1590,7 @@ PARAM_DEFINE_INT32(RC_MAP_GEAR_SW, 0);
 PARAM_DEFINE_INT32(RC_MAP_FLTM_BTN, 0);
 
 /**
- * AUX1 Passthrough RC channel
+ * AUX1 透传 RC 通道
  *
  * Default function: Camera pitch
  *
@@ -1620,7 +1620,7 @@ PARAM_DEFINE_INT32(RC_MAP_FLTM_BTN, 0);
 PARAM_DEFINE_INT32(RC_MAP_AUX1, 0);
 
 /**
- * AUX2 Passthrough RC channel
+ * AUX2 透传 RC 通道
  *
  * Default function: Camera roll
  *
@@ -1650,7 +1650,7 @@ PARAM_DEFINE_INT32(RC_MAP_AUX1, 0);
 PARAM_DEFINE_INT32(RC_MAP_AUX2, 0);
 
 /**
- * AUX3 Passthrough RC channel
+ * AUX3 透传 RC 通道
  *
  * Default function: Camera azimuth / yaw
  *
@@ -1680,7 +1680,7 @@ PARAM_DEFINE_INT32(RC_MAP_AUX2, 0);
 PARAM_DEFINE_INT32(RC_MAP_AUX3, 0);
 
 /**
- * AUX4 Passthrough RC channel
+ * AUX4 透传 RC 通道
  *
  * @min 0
  * @max 18
@@ -1708,7 +1708,7 @@ PARAM_DEFINE_INT32(RC_MAP_AUX3, 0);
 PARAM_DEFINE_INT32(RC_MAP_AUX4, 0);
 
 /**
- * AUX5 Passthrough RC channel
+ * AUX5 透传 RC 通道
  *
  * @min 0
  * @max 18
@@ -1736,7 +1736,7 @@ PARAM_DEFINE_INT32(RC_MAP_AUX4, 0);
 PARAM_DEFINE_INT32(RC_MAP_AUX5, 0);
 
 /**
- * AUX6 Passthrough RC channel
+ * AUX6 透传 RC 通道
  *
  * @min 0
  * @max 18

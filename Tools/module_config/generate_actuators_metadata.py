@@ -234,11 +234,11 @@ def get_actuator_output(yaml_config, output_functions, timer_config_file, verbos
         param_prefix = process_param_prefix(group['param_prefix'])
         standard_params = group.get('standard_params', {})
         standard_params_array = [
-            ( 'function', 'Function', 'FUNC', False ),
-            ( 'disarmed', 'Disarmed', 'DIS', False ),
-            ( 'min', 'Minimum', 'MIN', False ),
-            ( 'max', 'Maximum', 'MAX', False ),
-            ( 'failsafe', 'Failsafe', 'FAIL', True ),
+            ( 'function', '功能', 'FUNC', False ),
+            ( 'disarmed', '加锁值', 'DIS', False ),
+            ( 'min', '最小值', 'MIN', False ),
+            ( 'max', '最大值', 'MAX', False ),
+            ( 'failsafe', '故障保护', 'FAIL', True ),
             ]
         for key, label, param_suffix, advanced in standard_params_array:
             show_if = None
@@ -257,7 +257,7 @@ def get_actuator_output(yaml_config, output_functions, timer_config_file, verbos
 
 
         param = {
-                'label': 'Rev Range\n(for Servos)',
+                'label': '反向',
                 'name': param_prefix+'_REV',
                 'index-offset': -1,
                 'show-as': 'bitset',

@@ -9,16 +9,16 @@ parameters:
       definitions:
         CA_AIRFRAME:
             description:
-                short: Airframe selection
+                short: 机型选型
                 long: |
-                  Defines which mixer implementation to use.
-                  Some are generic, while others are specifically fit to a certain vehicle with a fixed set of actuators.
+                  定义要使用的混合器。
+                  有些是通用的，而另一些则专门适合具有一组固定执行器的特定飞行器。
 
-                  'Custom' should only be used if noting else can be used.
+                  “自定义”仅当无法使用其他内容时才应使用。
             type: enum
             values:
-                0: Multirotor
-                1: Fixed-wing
+                0: 多旋翼
+                1: 固定翼
                 2: Standard VTOL
                 3: Tiltrotor VTOL
                 4: Tailsitter VTOL
@@ -26,10 +26,10 @@ parameters:
                 6: Rover (Differential)
                 7: Motors (6DOF)
                 8: Multirotor with Tilt
-                9: Custom
-                10: Helicopter (tail ESC)
-                11: Helicopter (tail Servo)
-                12: Helicopter (Coaxial)
+                9: 自定义
+                10: 直升机 (tail ESC)
+                11: 直升机 (tail Servo)
+                12: 直升机 (Coaxial)
             default: 0
 
         CA_METHOD:
@@ -87,13 +87,12 @@ parameters:
         # Servo params
         CA_SV${i}_SLEW:
             description:
-                short: Servo ${i} slew rate limit
+                short: Servo ${i} 斜率限制
                 long: |
-                  Minimum time allowed for the servo input signal to pass through
-                  the full output range. A value x means that the servo signal
-                  can only go from -1 to 1 in minimum x seconds.
+                  舵机输入信号允许通过的最短时间完整的输出范围。
+                  值 x 表示伺服信号只能在最少 x 秒内从 -1 变为 1。
 
-                  Zero means that slew rate limiting is disabled.
+                  0 表示转换速率限制被禁用。
             type: float
             decimal: 2
             increment: 0.05
@@ -239,7 +238,7 @@ parameters:
         # control surfaces
         CA_SV_CS_COUNT:
             description:
-                short: Total number of Control Surfaces
+                short: 控制舵面总数
             type: enum
             values:
                 0: '0'
@@ -254,28 +253,28 @@ parameters:
             default: 0
         CA_SV_CS${i}_TYPE:
             description:
-                short: Control Surface ${i} type
+                short: 控制舵面 ${i} 类型
             type: enum
             values:
-                0: (Not set)
-                1: Left Aileron
-                2: Right Aileron
-                3: Elevator
-                4: Rudder
-                5: Left Elevon
-                6: Right Elevon
-                7: Left V-Tail
-                8: Right V-Tail
-                9: Left Flap
-                10: Right Flap
-                11: Airbrake
-                12: Custom
-                13: Left A-tail
-                14: Right A-tail
-                15: Single Channel Aileron
-                16: Steering Wheel
-                17: Left Spoiler
-                18: Right Spoiler
+                0: （未设定）
+                1: 左副翼
+                2: 右副翼
+                3: 升降
+                4: 方向
+                5: 左升降
+                6: 右升降
+                7: 左 V 尾
+                8: 右 V 尾
+                9: 左襟翼
+                10: 右襟翼
+                11: 空气刹
+                12: 自定义
+                13: 左 A 尾
+                14: 右 A 尾
+                15: 单通道副翼
+                16: 转向轮
+                17: 左扰流板
+                18: 右扰流板
             num_instances: *max_num_servos
             instance_start: 0
             default: 0
@@ -552,12 +551,12 @@ mixer:
                 default_is_nan: true
             per_item_parameters:
               - name: 'CA_R_REV'
-                label: 'Bidirectional'
+                label: '双向'
                 show_as: 'bitset'
                 index_offset: 0
                 advanced: true
               - name: 'CA_R${i}_SLEW'
-                label: 'Slew Rate'
+                label: '斜率'
                 index_offset: 0
                 advanced: true
         servo:
@@ -568,7 +567,7 @@ mixer:
                 default: 0
             per_item_parameters:
               - name: 'CA_SV${i}_SLEW'
-                label: 'Slew Rate'
+                label: '斜率'
                 index_offset: 0
                 advanced: true
         DEFAULT:
@@ -745,37 +744,37 @@ mixer:
                             advanced: true
 
             1: # Fixed Wing
-                title: 'Fixed Wing'
+                title: '固定翼'
                 actuators:
                   - actuator_type: 'motor'
-                    group_label: 'Motors'
+                    group_label: '电机'
                     count: 'CA_ROTOR_COUNT'
                   - actuator_type: 'servo'
-                    group_label: 'Control Surfaces'
+                    group_label: '舵机'
                     count: 'CA_SV_CS_COUNT'
                     per_item_parameters:
                         extra:
                           - name: 'CA_SV_CS${i}_TYPE'
-                            label: 'Type'
+                            label: '类型'
                             function: 'type'
                             identifier: 'servo-type'
                           - name: 'CA_SV_CS${i}_TRQ_R'
-                            label: 'Roll Torque'
+                            label: '横滚比例'
                             identifier: 'servo-torque-roll'
                           - name: 'CA_SV_CS${i}_TRQ_P'
-                            label: 'Pitch Torque'
+                            label: '俯仰比例'
                             identifier: 'servo-torque-pitch'
                           - name: 'CA_SV_CS${i}_TRQ_Y'
-                            label: 'Yaw Torque'
+                            label: '偏航比例'
                             identifier: 'servo-torque-yaw'
                           - name: 'CA_SV_CS${i}_TRIM'
-                            label: 'Trim'
+                            label: '偏移量'
                           - name: 'CA_SV_CS${i}_FLAP'
-                            label: 'Flaps Scale'
+                            label: '襟翼比例'
                             advanced: true
                             identifier: 'servo-scale-flap'
                           - name: 'CA_SV_CS${i}_SPOIL'
-                            label: 'Spoiler Scale'
+                            label: '扰流板比例'
                             advanced: true
                             identifier: 'servo-scale-spoiler'
 

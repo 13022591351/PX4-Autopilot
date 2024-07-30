@@ -35,7 +35,7 @@ px4_add_romfs_files(
 	# [0-999] Reserved (historical)
 
 	# [18000, 18999] High-altitude balloons
-	18001_TF-B1
+	# 18001_TF-B1
 
 	# [22000, 22999] Reserve for custom models
 )
@@ -55,51 +55,51 @@ if(CONFIG_MODULES_MC_RATE_CONTROL)
 	px4_add_romfs_files(
 		# [4000, 4999] Quadrotor x
 		4001_quad_x
-		4014_s500
-		4015_holybro_s500
-		4016_holybro_px4vision
-		4017_nxp_hovergames
-		4019_x500_v2
-		4020_holybro_px4vision_v1_5
-		4041_beta75x
-		4050_generic_250
-		4052_holybro_qav250
-		4053_holybro_kopis2
-		4061_atl_mantis_edu
-		4071_ifo
-		4073_ifo-s
-		4500_clover4
-		4601_droneblocks_dexi_5
-		4901_crazyflie21
+		# 4014_s500
+		# 4015_holybro_s500
+		# 4016_holybro_px4vision
+		# 4017_nxp_hovergames
+		# 4019_x500_v2
+		# 4020_holybro_px4vision_v1_5
+		# 4041_beta75x
+		# 4050_generic_250
+		# 4052_holybro_qav250
+		# 4053_holybro_kopis2
+		# 4061_atl_mantis_edu
+		# 4071_ifo
+		# 4073_ifo-s
+		# 4500_clover4
+		# 4601_droneblocks_dexi_5
+		# 4901_crazyflie21
 
 		# [5000, 5999] Quadrotor +
-		5001_quad_+
+		# 5001_quad_+
 
 		# [6000, 6999] Hexarotor x
-		6001_hexa_x
-		6002_draco_r
+		# 6001_hexa_x
+		# 6002_draco_r
 
 		# [7000, 7999] Hexarotor +
-		7001_hexa_+
+		# 7001_hexa_+
 
 		# [8000, 8999] Octorotor +
-		8001_octo_x
+		# 8001_octo_x
 
 		# [9000, 9999] Octorotor +
-		9001_octo_+
+		# 9001_octo_+
 
 		# [11000, 11999] Hexa Cox
-		11001_hexa_cox
+		# 11001_hexa_cox
 
 		# [12000, 12999] Octo Cox
-		12001_octo_cox
+		# 12001_octo_cox
 
 		# [14000, 14999] MC with tilt
-		14001_generic_mc_with_tilt
+		# 14001_generic_mc_with_tilt
 
-		16001_helicopter
+		# 16001_helicopter
 
-		24001_dodeca_cox
+		# 24001_dodeca_cox
 	)
 endif()
 
@@ -107,14 +107,15 @@ if(CONFIG_MODULES_FW_RATE_CONTROL)
 	px4_add_romfs_files(
 		# [2000, 2999] Standard planes
 		2100_standard_plane
-		2106_albatross
+		# 2106_albatross
+		2200_mini_talon
 
 		# [3000, 3999] Flying wing
 		3000_generic_wing
 
 		# [17000, 17999] Autogyro
-		17002_TF-AutoG2
-		17003_TF-G2
+		# 17002_TF-AutoG2
+		# 17003_TF-G2
 	)
 endif()
 

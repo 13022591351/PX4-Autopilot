@@ -206,7 +206,7 @@ PARAM_DEFINE_INT32(COM_RC_ARM_HYST, 1000);
  * @increment 0.1
  */
 
-PARAM_DEFINE_FLOAT(COM_DISARM_LAND, 2.0f);
+PARAM_DEFINE_FLOAT(COM_DISARM_LAND, -1.0f);
 
 /**
  * Time-out for auto disarm if not taking off
@@ -222,7 +222,7 @@ PARAM_DEFINE_FLOAT(COM_DISARM_LAND, 2.0f);
  * @decimal 1
  * @increment 0.1
  */
-PARAM_DEFINE_FLOAT(COM_DISARM_PRFLT, 10.0f);
+PARAM_DEFINE_FLOAT(COM_DISARM_PRFLT, -1.0f);
 
 /**
  * Allow arming without GPS
@@ -753,7 +753,7 @@ PARAM_DEFINE_INT32(COM_ARM_CHK_ESCS, 0);
  *
  * @group Commander
  */
-PARAM_DEFINE_INT32(COM_PREARM_MODE, 0);
+PARAM_DEFINE_INT32(COM_PREARM_MODE, 2);
 
 /**
  * Enable force safety
